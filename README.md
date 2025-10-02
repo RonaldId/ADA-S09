@@ -1,2 +1,0 @@
-aló
-hello word(print)
