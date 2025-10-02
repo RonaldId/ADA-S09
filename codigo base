@@ -1,0 +1,72 @@
+
+#include <iostream>
+#include <list>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class HashTable {
+    private:
+    
+    int capacity;
+    
+    vector<list<pair<string, int>>> table;
+    
+    int hashFunction (const string& key){
+        int hashValue = 0;
+        for(char ch: key){
+            hashValue += ch;
+        }
+        return hashValue % capacity;
+    }
+    
+    public:
+    
+    HashTable(int size) : capacity (size){
+        table.resize (capacity);
+    }
+    
+    void insert (const string& key, int value){
+        int index = hashFunction (key);
+        
+        for (auto& pair : table [index]){
+            if(pair.first == key){
+                pair.second = value;
+                return;
+            }
+        }
+        table[index].emplace_back(key, value);
+    }
+    
+    int search (const string& key){
+        int index = hashFunction(key);
+        for (const auto& pair: table[index]){
+            if (pair.first ==key){
+                return pair.second;
+            }
+        }
+        return -1;
+    }
+    
+    void remove (const string&key){
+        int index = hashFunction(key);
+        auto& entries = table[index];
+        for (auto it = entries.begin(); it != entries.end(); ++it){
+            if(it->first == key){
+                entries.erase(it);
+                return;
+            }
+        }
+    }
+    
+    void display (){
+        for (int i=0; i<capacity; ++i){
+            cout << "Bucket "<< i << ": ";
+            for (const auto& pair : table[i]){
+                cout << " {"<<pair.first<<": "<<pair.second<<"} ";
+            }
+            cout<<endl;
+        }
+    }
+};
